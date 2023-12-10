@@ -1,4 +1,7 @@
 <script>
+	import { onMount } from 'svelte';
+	let movimientos = [];
+
 	let monto;
 	let fecha;
 	let descripcion;
@@ -19,6 +22,15 @@
 		} else {
 		}
 	};
+
+	onMount(async () => {
+		const response = await fetch('/movimientos');
+		if (response.ok) {
+			movimientos = await response.json();
+		} else {
+			// Manejar errores, por ejemplo, mostrar un mensaje de error
+		}
+	});
 </script>
 
 <div class="flex flex-1 h-screen w-full justify-center items-center">
@@ -37,4 +49,23 @@
 		<div class="h-4 w-full" />
 		<button class="bg-red-400 rounded-lg py-2" type="submit">Agregar</button>
 	</form>
+
+	<table>
+		<thead>
+			<tr>
+				<th>Monto</th>
+				<th>Fecha</th>
+				<th>Descripción</th>
+			</tr>
+		</thead>
+		<tbody>
+			{#each movimientos as movimiento}
+				<tr>
+					<td>{movimiento.monto}</td>
+					<td>{movimiento.fecha}</td>
+					<td>{movimiento.descripcion}</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
 </div>
